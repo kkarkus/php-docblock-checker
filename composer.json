@@ -1,5 +1,5 @@
 {
-    "name"             : "block8/php-docblock-checker",
+    "name"             : "divante-ltd/php-docblock-checker",
     "description"      : "A simple tool for checking that your PHP classes and methods use docblocks.",
     "minimum-stability": "stable",
     "type"             : "library",

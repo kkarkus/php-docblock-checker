@@ -312,7 +312,23 @@ class CheckerCommand extends Command
                                 'param' => $param,
                             ];
                         } elseif (!empty($type) && $method['docblock']['params'][$param] != $type) {
-                            if ($type == 'array' && substr($method['docblock']['params'][$param], -2) == '[]') {
+                            if (is_array($type)) {
+                                $docblockTypes = explode('|', $method['docblock']['params'][$param]);
+                                sort($docblockTypes);
+                                if ($type != $docblockTypes) {
+                                    $warnings = true;
+                                    $this->warnings[] = [
+                                        'type' => 'param-mismatch',
+                                        'file' => $file,
+                                        'class' => $name,
+                                        'method' => $name,
+                                        'line' => $method['line'],
+                                        'param' => $param,
+                                        'param-type' => implode('|', $type),
+                                        'doc-type' => $method['docblock']['params'][$param],
+                                    ];
+                                }
+                            } elseif ($type == 'array' && substr($method['docblock']['params'][$param], -2) == '[]') {
                                 // Do nothing because this is fine.
                             } else {
                                 $warnings = true;

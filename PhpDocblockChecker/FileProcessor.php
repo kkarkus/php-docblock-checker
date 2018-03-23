@@ -128,8 +128,12 @@ class FileProcessor
                     foreach ($method->params as $param) {
                         $type = $param->type;
 
-                        if (!is_null($type)) {
-                            $type = (string)$type;
+                        if (!$param->type instanceof NullableType) {
+                            if (!is_null($type)) {
+                                $type = (string)$type;
+                            }
+                        } else {
+                            $type = (string) $type->type;
                         }
 
                         if (isset($uses[$type])) {
@@ -137,6 +141,11 @@ class FileProcessor
                         }
 
                         $type = substr($type, 0, 1) == '\\' ? substr($type, 1) : $type;
+
+                        if ($param->type instanceof NullableType) {
+                            $type = ['null', $type];
+                            sort($type);
+                        }
 
                         $thisMethod['params']['$'.$param->name] = $type;
                     }
